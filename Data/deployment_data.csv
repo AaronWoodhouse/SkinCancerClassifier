@@ -1,0 +1,22 @@
+﻿lesion_id,image_id,dx,dx_type,age,sex,localization
+test_0,test_0,mel,NA,80,male,scalp
+test_1,test_1,mel,NA,80,male,scalp
+test_2,test_2,mel,NA,40,male,back
+test_3,test_3,nv,NA,60,female,upper extremity
+test_4,test_4,nv,NA,50,female,unknown
+test_5,test_5,nv,NA,0,male,back
+test_6,test_6,bcc,NA,30,female,face
+test_7,test_7,bcc,NA,80,female,face
+test_8,test_8,bcc,NA,70,male,face
+test_9,test_9,akiec,NA,75,male,face
+test_10,test_10,akiec,NA,50,male,upper extremity
+test_11,test_11,akiec,NA,80,female,face
+test_12,test_12,bkl,NA,80,female,face
+test_13,test_13,bkl,NA,75,male,face
+test_14,test_14,bkl,NA,70,female,face
+test_15,test_15,df,NA,70,female,chest
+test_16,test_16,df,NA,75,female,upper extremity
+test_17,test_17,df,NA,40,female,lower extremity
+test_18,test_18,vasc,NA,40,female,chest
+test_19,test_19,vasc,NA,0,male,back
+test_20,test_20,vasc,NA,50,male,face
