@@ -13,7 +13,7 @@ Highest testing accuracy achieved: 79.1%
 
 - If you'd like to train the models on your own metadata and images, you can use the 'Train' button. Note: this may take a long time to complete, and will **OVERWRITE** existing models. Progress can be tracked in the accompanied command window.
 
-- You can choose between using the pre-trained, default models, or your own trained models.
+- You can choose between using the pre-trained default models, or your own trained models.
 
 - Select which model you would like to use.
 
