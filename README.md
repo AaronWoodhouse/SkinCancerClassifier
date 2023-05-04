@@ -23,8 +23,10 @@ Highest testing accuracy achieved: 79.1%
 
 ## Getting Started
 ### How to Install
-Clone the repository locally.
-Ensure Python 3 is installed, as well as all dependencies, which can be found by the command `$ pip check`.
+- Clone the repository locally.
+
+- Ensure Python 3 is installed, as well as all dependencies, which can be found by the command `$ pip check`.
+
 ### How to Run
 - Run the included shortcut "Cancer Predictor".
 #
