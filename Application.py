@@ -19,6 +19,7 @@ sys.path.append(DIR)
 from models import *
 import resizer
 import CancerPrediction
+import training_testing
 
 class Application():
     """Skin cancer predictor application."""
@@ -39,7 +40,7 @@ class Application():
 
         """
         window = Tk()
-        window.geometry("800x210")
+        window.geometry("850x280")
         window.title("Cancer Predictor")
         self.p1 = PhotoImage(file = os.path.join(DIR, 'icon.png'))
         window.iconphoto(False, self.p1)
@@ -47,10 +48,11 @@ class Application():
         Label(window, text='Data path').grid(sticky = W, row=0, padx=10, pady=10)
         Label(window, text='Image folder path').grid(sticky = W, row=1, padx=10, pady=10)
         Label(window, text='Resize images').grid(sticky = W, row=2, padx=10, pady=10)
-        Label(window, text='Model').grid(sticky = W, row=3, padx=10, pady=10)
+        Label(window, text='Train models').grid(sticky = W, row=3, padx=10, pady=10)
+        Label(window, text='Prediction Model').grid(sticky = W, row=5, padx=10, pady=10)
 
-        self.e1 = Entry(window, width=90)
-        self.e2 = Entry(window, width=90)
+        self.e1 = Entry(window, width=100)
+        self.e2 = Entry(window, width=100)
 
         # default path set to deployment data
         self.e1.insert(END, os.path.join(DIR, 'Data\deployment_data.csv'))
@@ -62,14 +64,20 @@ class Application():
         )
 
         resize_button = ttk.Button(text="Resize", command=self.resize)
+        train_button = ttk.Button(text="Train", command=self.train)
         deploy_button = ttk.Button(text="Predict", command=self.deploy)
 
+        self.use_default = IntVar()
+        check_button = Checkbutton(window, text='Use default models', variable=self.use_default, onvalue = True, offvalue = False)
+        check_button.select()
 
         self.e1.grid(row=0, column=1)
         self.e2.grid(row=1, column=1)
         resize_button.grid(sticky = W, row=2, column=1)
-        self.combo.grid(sticky = W, row=3, column=1)
-        deploy_button.grid(sticky = W, row=4, column=1)
+        train_button.grid(sticky = W, row=3, column=1)
+        check_button.grid(row=4, column=1, sticky=W)
+        self.combo.grid(sticky = W, row=5, column=1)
+        deploy_button.grid(sticky = W, row=6, column=1)
 
         mainloop()
     
@@ -129,7 +137,10 @@ class Application():
         imgs = self.e2.get()
         model = self.combo.get()
         model = self._to_filename(model)
-        results = CancerPrediction.deploy(data, imgs, model)
+        
+        use_default = self.use_default.get()
+        
+        results = CancerPrediction.deploy(data, imgs, model, use_default)
         
         result_window = Toplevel()
         result_window.title('Results')
@@ -154,6 +165,27 @@ class Application():
         
         print("Resizing...")
         resizer.resize(self.e2.get())
+        print("Done")
+        
+    def train(self):
+        """Train models on set data and images.
+        
+        Raises
+        ------
+        SyntaxError
+            If image folder given is not a path.
+            If data file given is not a path.
+        
+        """
+        
+        if not os.path.isdir(self.e1.get()):
+            raise SyntaxError("Data file given is not a path")
+            
+        if not os.path.isdir(self.e2.get()):
+            raise SyntaxError("Image folder given is not a path")
+            
+        print("Training...")
+        training_testing.train(self.e1.get(), self.e2.get())
         print("Done")
         
 def main():

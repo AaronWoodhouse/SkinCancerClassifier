@@ -31,6 +31,13 @@ class ImageDataset(Dataset):
     def __init__(self, data_path, imgs_path):
         """Initialize class.
         
+        Parameters
+        ----------
+        data_path : str
+            Data file path.
+        imgs_path : str
+            Image folder path.
+        
         Attributes
         ----------
         _x_imgs : :float32:tensor
@@ -97,6 +104,13 @@ class ImageDataset(Dataset):
     
     def __preprocess_data(self, data_path, imgs_path):
         """Preprocess deployment data.
+        
+        Parameters
+        ----------
+        data_path : str
+            Data file path.
+        imgs_path : str
+            Image folder path.
         
         Returns
         -------        
@@ -166,7 +180,7 @@ class ImageDataset(Dataset):
         return table_tensor, label_tensor, img_tensor
     
 # Methods #
-def test_model(model_file: str, data_path: str, imgs_path: str, display_imgs: bool, display_predictions: bool):
+def test_model(model_file: str, data_path: str, imgs_path: str, use_default: bool, display_imgs: bool, display_predictions: bool):
     """Test model on dataset.
 
     Parameters
@@ -177,6 +191,8 @@ def test_model(model_file: str, data_path: str, imgs_path: str, display_imgs: bo
         Metadata path.
     imgs_path : str
         Images path.
+    use_default : bool
+        Use default models.
     display_imgs : bool
         Display images.
     display_predictions : bool
@@ -192,7 +208,7 @@ def test_model(model_file: str, data_path: str, imgs_path: str, display_imgs: bo
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     test_dataset = ImageDataset(data_path, imgs_path)
-    model = load_model(model_file, device)
+    model = load_model(model_file, use_default, device)
     dataloader = DataLoader(test_dataset, batch_size=128, shuffle=False)
     transform = transforms.ToPILImage()
     labels_map = ['bcc','bkl','df','nv','vasc','mel','akiec']
@@ -234,13 +250,15 @@ def test_model(model_file: str, data_path: str, imgs_path: str, display_imgs: bo
     
     return results
 
-def load_model(model_file: str, device):
+def load_model(model_file: str, use_default: bool, device):
     """Load model to given device.
 
     Parameters
     ----------
     model_file : str
         Model file name.
+    use_default : bool
+        Use default models.
     device
         Device to load model to.
 
@@ -250,12 +268,35 @@ def load_model(model_file: str, device):
         Loaded instance of the model.
 
     """
-    model = torch.load(os.path.join(DIR, 'Prediction_Models/' + model_file)).to(device)
+    path = 'Prediction_Models/'
+    
+    if use_default:
+        path += 'Default_Models/'
+
+    model = torch.load(os.path.join(DIR, path + model_file)).to(device)
     return model
 
-# TODO: Exceptions
-def deploy(data: str, imgs: str, model: str):
-    results = test_model(model, data, imgs, False, True)
+def deploy(data: str, imgs: str, model: str, use_default: bool):
+    """Deploy given model on given dataset.
+
+    Parameters
+    ----------
+    data : str
+        Data file path.
+    imgs : str
+        Image folder path.
+    model : str
+        Model file name.
+    use_default : bool
+        Use default models.
+
+    Returns
+    -------
+    results : str
+        Deployment results.
+
+    """
+    results = test_model(model, data, imgs, use_default, False, True)
     return results
     
     
