@@ -42,8 +42,15 @@ import models
 class ImageDataset(Dataset):
     """Dataset of training images."""
     
-    def __init__(self):
+    def __init__(self, data: str, imgs: str):
         """Initialize class.
+        
+        Parameters
+        ----------
+        data : str
+            Data file path.
+        imgs : str
+            Images folder path.
         
         Attributes
         ----------
@@ -55,7 +62,7 @@ class ImageDataset(Dataset):
             Training labels.
 
         """
-        table_tensor, label_tensor, img_tensor = self.__preprocess_data()
+        table_tensor, label_tensor, img_tensor = self.__preprocess_data(data, imgs)
         
         self._x_train_img = img_tensor.to(torch.float32)
         self._x_train_data = table_tensor.to(torch.float32)
@@ -108,9 +115,15 @@ class ImageDataset(Dataset):
     def y_train(self):
         del self._y_train   
     
-    
-    def __preprocess_data(self):
+    def __preprocess_data(self, data: str, imgs: str):
         """Preprocess training data.
+        
+        Parameters
+        ----------
+        data : str
+            Data file path.
+        imgs : str
+            Images folder path.
         
         Returns
         -------        
@@ -123,7 +136,7 @@ class ImageDataset(Dataset):
         """
         
         # Table Data #
-        table_data = pd.read_csv(os.path.join(DIR, 'Data/HAM10000_metadata.csv'))
+        table_data = pd.read_csv(data)
         table_data = table_data.drop(['lesion_id','dx_type'], axis=1)
         
         labels = table_data['dx']
@@ -160,7 +173,7 @@ class ImageDataset(Dataset):
         
         # Only gets images that exist in metadata
         for x in table_data['image_id']:
-            img = Image.open(os.path.join(DIR, 'Data/Images/' + x + ".jpg"))
+            img = Image.open(imgs + '/' + x + ".jpg")
             
             img_t = convert_tensor(img)
             tensors.append(img_t)
@@ -179,8 +192,15 @@ class ImageDataset(Dataset):
         return table_tensor, label_tensor, img_tensor
 
 # Methods #
-def get_dataloaders():
+def get_dataloaders(data: str, imgs: str):
     """Gets dataloaders for training, testing, and validation.
+
+    Parameters
+    ----------
+    data : str
+        Data file path.
+    imgs : str
+        Images folder path.
 
     Returns
     -------
@@ -192,7 +212,7 @@ def get_dataloaders():
         Testing Dataloader.
 
     """
-    df = ImageDataset()
+    df = ImageDataset(data, imgs)
     
     train_dataset, test_dataset = random_split(df, (0.8, 0.2))
     train_dataset, val_dataset = random_split(train_dataset, (0.9, 0.1))
@@ -308,8 +328,19 @@ def plot_test_accuracy(models, test_dataloader):
     ax.bar(models, accuracy)
     plt.show()
 
+
+def train(data: str, imgs: str):
+    """Train models on given dataset.
+
+    Parameters
+    ----------
+    data : str
+        Data file path.
+    imgs : str
+        Image folder path.
+
+    """
     
-def main():
     # GPU Acceleration #
     device = torch.device('cuda:0' \
                           if torch.cuda.is_available() \
@@ -317,7 +348,7 @@ def main():
     print(device)
     
     print('Processing data...')
-    train_dataloader, val_dataloader, test_dataloader = get_dataloaders()
+    train_dataloader, val_dataloader, test_dataloader = get_dataloaders(data, imgs)
     
     
     # Models #
@@ -363,10 +394,6 @@ def main():
     torch.save(cm3_model, os.path.join(DIR, 'Prediction_Models/cm3_model.pt'))
     torch.save(dense_net_model, os.path.join(DIR, 'Prediction_Models/dense_net_model.pt'))
     print('Done')
-    
-if __name__ == '__main__':
-    main()
-
     
     
     
