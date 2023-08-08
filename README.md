@@ -1,8 +1,8 @@
 # Skin Cancer Predictor
 
-Highest testing accuracy achieved: 79.1%
+Highest validation accuracy achieved: 79.1%
 
-***Highest deployment accuracy achieved: 38.0%***
+Highest deployment accuracy achieved: 38.0%
 
 ## How to Use
 - Specify a .csv file to use as the metadata of the images.
