@@ -1,4 +1,4 @@
-# Skin Cancer Predictor
+# Skin Cancer Classifier
 
 Highest validation accuracy achieved: 79.1%
 
