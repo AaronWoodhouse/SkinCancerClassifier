@@ -4,6 +4,8 @@ Highest validation accuracy achieved: 79.1%
 
 Highest deployment accuracy achieved: 38.0%
 
+An in-depth explanation of these results can be found in "Machine Learning Presentation.pdf"
+
 ## How to Use
 - Specify a .csv file to use as the metadata of the images.
 
